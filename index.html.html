@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tic Tac Toe — Pro Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Background decoration -->
+  <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <main class="app" id="app">
+
+    <!-- Header -->
+    <header class="header">
+      <h1 class="logo">
+        <span class="logo__x">X</span>
+        <span class="logo__text">TicTac</span>
+        <span class="logo__o">O</span>
+      </h1>
+    </header>
+
+    <!-- Mode Selection Screen -->
+    <section class="screen screen--mode" id="modeScreen" role="main" aria-label="Game mode selection">
+      <h2 class="screen__title">Choose Mode</h2>
+      <div class="mode-cards">
+        <button class="mode-card" id="btnPvP" data-mode="pvp" aria-label="Player vs Player">
+          <span class="mode-card__icon" aria-hidden="true">👥</span>
+          <span class="mode-card__label">PvP</span>
+          <span class="mode-card__sub">Player vs Player</span>
+        </button>
+        <button class="mode-card" id="btnAI" data-mode="ai" aria-label="Player vs AI">
+          <span class="mode-card__icon" aria-hidden="true">🤖</span>
+          <span class="mode-card__label">vs AI</span>
+          <span class="mode-card__sub">Player vs Computer</span>
+        </button>
+      </div>
+
+      <!-- AI difficulty panel -->
+      <div class="difficulty" id="difficultyPanel" aria-hidden="true" hidden>
+        <p class="difficulty__label">AI Difficulty</p>
+        <div class="difficulty__btns" role="group" aria-label="Select AI difficulty">
+          <button class="diff-btn diff-btn--active" id="btnEasy" data-diff="easy">Easy</button>
+          <button class="diff-btn" id="btnHard" data-diff="hard">Hard 💀</button>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="btnStart" aria-label="Start game">Start Game →</button>
+    </section>
+
+    <!-- Game Screen -->
+    <section class="screen screen--game" id="gameScreen" hidden aria-label="Game board">
+
+      <!-- Scoreboard -->
+      <div class="scoreboard" role="region" aria-label="Current scores">
+        <div class="score-tile score-tile--x" id="tileX">
+          <span class="score-tile__mark" aria-hidden="true">X</span>
+          <span class="score-tile__name" id="nameX">Player X</span>
+          <span class="score-tile__num" id="scoreX" aria-label="Player X score: 0">0</span>
+        </div>
+        <div class="score-tile score-tile--draw">
+          <span class="score-tile__mark" aria-hidden="true">=</span>
+          <span class="score-tile__name">Draws</span>
+          <span class="score-tile__num" id="scoreDraw" aria-label="Draws: 0">0</span>
+        </div>
+        <div class="score-tile score-tile--o" id="tileO">
+          <span class="score-tile__mark" aria-hidden="true">O</span>
+          <span class="score-tile__name" id="nameO">Player O</span>
+          <span class="score-tile__num" id="scoreO" aria-label="Player O score: 0">0</span>
+        </div>
+      </div>
+
+      <!-- Status bar -->
+      <div class="status-bar" role="status" aria-live="polite" aria-atomic="true">
+        <span class="status-bar__pip" id="turnPip" aria-hidden="true"></span>
+        <span class="status-bar__text" id="statusText">Player X's turn</span>
+      </div>
+
+      <!-- Board -->
+      <div class="board-wrap">
+        <div class="board" id="board" role="grid" aria-label="Tic Tac Toe board">
+          <!-- Cells injected by JS -->
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <button class="ctrl-btn ctrl-btn--primary" id="btnRestart" aria-label="Start new round">
+          🔄 New Round
+        </button>
+        <button class="ctrl-btn" id="btnChangeMode" aria-label="Change game mode">
+          ⚙️ Mode
+        </button>
+        <button class="ctrl-btn ctrl-btn--danger" id="btnResetScores" aria-label="Reset all scores">
+          🗑️ Reset
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Result Overlay -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlayTitle" hidden>
+    <div class="overlay__backdrop" id="overlayBackdrop"></div>
+    <div class="overlay__card">
+      <span class="overlay__emoji" id="overlayEmoji" aria-hidden="true">🎉</span>
+      <h2 class="overlay__title" id="overlayTitle">Player X Wins!</h2>
+      <p class="overlay__sub" id="overlaySub">Brilliant play!</p>
+      <button class="btn-primary" id="btnPlayAgain" aria-label="Play again">
+        Play Again →
+      </button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
