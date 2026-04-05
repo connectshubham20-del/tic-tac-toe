@@ -4,29 +4,56 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tic Tac Toe</title>
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0e17; --surface: #1a1826; --x-color: #ff6b6b;
+      --o-color: #4ecdc4; --text: #fffffe; --muted: #a7a9be; --border: #2e2b3e;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .container { width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+    h1 { font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--text); }
+    h1 span { color: var(--x-color); }
+    .scoreboard { display: flex; gap: 16px; width: 100%; }
+    .score { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .score .label { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--x-color); }
+    .score .label.o { color: var(--o-color); }
+    .score .label.draws { color: var(--muted); }
+    .score .value { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--text); }
+    .status { font-size: 1.1rem; color: var(--muted); }
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; }
+    .cell { background: var(--surface); border: 2px solid var(--border); border-radius: 18px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 2.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s; user-select: none; }
+    .cell:hover:not(.taken) { background: #222033; border-color: #4a4768; transform: scale(1.04); }
+    .cell.x { color: var(--x-color); border-color: var(--x-color); background: rgba(255,107,107,0.08); }
+    .cell.o { color: var(--o-color); border-color: var(--o-color); background: rgba(78,205,196,0.08); }
+    .cell.taken { cursor: default; }
+    .cell.win { background: rgba(255,214,0,0.12); border-color: #ffd600; color: #ffd600; }
+    .buttons { display: flex; gap: 12px; width: 100%; }
+    button { flex: 1; padding: 14px; border: none; border-radius: 14px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    #restart-btn { background: var(--x-color); color: #fff; }
+    #restart-btn:hover { background: #ff4f4f; transform: translateY(-2px); }
+    #reset-btn { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+    #reset-btn:hover { background: #222033; color: var(--text); }
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 100; backdrop-filter: blur(4px); }
+    .overlay.show { opacity: 1; pointer-events: all; }
+    .popup { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 48px 40px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; transform: scale(0.85); transition: transform 0.3s; }
+    .overlay.show .popup { transform: scale(1); }
+    .popup-icon { font-size: 3.5rem; }
+    .popup h2 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; }
+    #play-again-btn { background: var(--x-color); color: #fff; padding: 14px 36px; border-radius: 14px; font-size: 1rem; flex: none; width: auto; }
+    #play-again-btn:hover { background: #ff4f4f; transform: translateY(-2px); }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>Tic <span>Tac</span> Toe</h1>
-
     <div class="scoreboard">
-      <div class="score">
-        <span class="label">X</span>
-        <span class="value" id="score-x">0</span>
-      </div>
-      <div class="score">
-        <span class="label draws">Draw</span>
-        <span class="value" id="score-draw">0</span>
-      </div>
-      <div class="score">
-        <span class="label o">O</span>
-        <span class="value" id="score-o">0</span>
-      </div>
+      <div class="score"><span class="label">X</span><span class="value" id="score-x">0</span></div>
+      <div class="score"><span class="label draws">Draw</span><span class="value" id="score-draw">0</span></div>
+      <div class="score"><span class="label o">O</span><span class="value" id="score-o">0</span></div>
     </div>
-
     <div class="status" id="status">Player X's turn</div>
-
     <div class="board" id="board">
       <div class="cell" data-index="0"></div>
       <div class="cell" data-index="1"></div>
@@ -38,13 +65,11 @@
       <div class="cell" data-index="7"></div>
       <div class="cell" data-index="8"></div>
     </div>
-
     <div class="buttons">
       <button id="restart-btn">New Game</button>
       <button id="reset-btn">Reset Scores</button>
     </div>
   </div>
-
   <div class="overlay" id="overlay">
     <div class="popup">
       <div class="popup-icon" id="popup-icon">🎉</div>
@@ -52,8 +77,78 @@
       <button id="play-again-btn">Play Again</button>
     </div>
   </div>
-
-  <script src="script.js"></script>
+  <script>
+    const cells = document.querySelectorAll('.cell');
+    const status = document.getElementById('status');
+    const overlay = document.getElementById('overlay');
+    const popupMsg = document.getElementById('popup-msg');
+    const popupIcon = document.getElementById('popup-icon');
+    const restartBtn = document.getElementById('restart-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const playAgainBtn = document.getElementById('play-again-btn');
+    const scoreX = document.getElementById('score-x');
+    const scoreO = document.getElementById('score-o');
+    const scoreDraw = document.getElementById('score-draw');
+    const WIN_COMBOS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    let board = Array(9).fill('');
+    let currentPlayer = 'X';
+    let gameOver = false;
+    let scores = { X: 0, O: 0, Draw: 0 };
+    function init() {
+      board = Array(9).fill('');
+      currentPlayer = 'X';
+      gameOver = false;
+      cells.forEach(cell => { cell.textContent = ''; cell.className = 'cell'; });
+      status.textContent = "Player X's turn";
+      overlay.classList.remove('show');
+    }
+    function checkWinner() {
+      for (const [a, b, c] of WIN_COMBOS) {
+        if (board[a] && board[a] === board[b] && board[a] === board[c])
+          return { winner: board[a], combo: [a, b, c] };
+      }
+      if (board.every(cell => cell !== '')) return { winner: 'Draw', combo: [] };
+      return null;
+    }
+    function handleClick(e) {
+      const idx = e.target.dataset.index;
+      if (gameOver || board[idx]) return;
+      board[idx] = currentPlayer;
+      e.target.textContent = currentPlayer;
+      e.target.classList.add(currentPlayer.toLowerCase(), 'taken');
+      const result = checkWinner();
+      if (result) {
+        gameOver = true;
+        if (result.winner === 'Draw') {
+          scores.Draw++;
+          scoreDraw.textContent = scores.Draw;
+          status.textContent = "It's a Draw!";
+          setTimeout(() => showPopup("It's a Draw!", '🤝'), 400);
+        } else {
+          scores[result.winner]++;
+          if (result.winner === 'X') scoreX.textContent = scores.X;
+          else scoreO.textContent = scores.O;
+          result.combo.forEach(i => cells[i].classList.add('win'));
+          status.textContent = `Player ${result.winner} Wins!`;
+          setTimeout(() => showPopup(`Player ${result.winner} Wins!`, '🎉'), 400);
+        }
+      } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        status.textContent = `Player ${currentPlayer}'s turn`;
+      }
+    }
+    function showPopup(msg, icon) { popupMsg.textContent = msg; popupIcon.textContent = icon; overlay.classList.add('show'); }
+    cells.forEach(cell => cell.addEventListener('click', handleClick));
+    restartBtn.addEventListener('click', init);
+    playAgainBtn.addEventListener('click', init);
+    resetBtn.addEventListener('click', () => {
+      scores = { X: 0, O: 0, Draw: 0 };
+      scoreX.textContent = 0; scoreO.textContent = 0; scoreDraw.textContent = 0;
+      init();
+    });
+    init();
+  </script>
 </body>
 </html>
+
 
