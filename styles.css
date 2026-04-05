@@ -1,4 +1,161 @@
-/* ============================================================
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f0e17;
+  --surface: #1a1826;
+  --x-color: #ff6b6b;
+  --o-color: #4ecdc4;
+  --text: #fffffe;
+  --muted: #a7a9be;
+  --border: #2e2b3e;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+h1 span { color: var(--x-color); }
+
+.scoreboard {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.score {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.score .label { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--x-color); }
+.score .label.o { color: var(--o-color); }
+.score .label.draws { color: var(--muted); }
+.score .value { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--text); }
+
+.status { font-size: 1.1rem; color: var(--muted); }
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.cell {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 18px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.cell:hover:not(.taken) { background: #222033; border-color: #4a4768; transform: scale(1.04); }
+.cell.x { color: var(--x-color); border-color: var(--x-color); background: rgba(255,107,107,0.08); }
+.cell.o { color: var(--o-color); border-color: var(--o-color); background: rgba(78,205,196,0.08); }
+.cell.taken { cursor: default; }
+.cell.win { background: rgba(255,214,0,0.12); border-color: #ffd600; color: #ffd600; }
+
+.buttons { display: flex; gap: 12px; width: 100%; }
+
+button {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#restart-btn { background: var(--x-color); color: #fff; }
+#restart-btn:hover { background: #ff4f4f; transform: translateY(-2px); }
+#reset-btn { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+#reset-btn:hover { background: #222033; color: var(--text); transform: translateY(-2px); }
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.overlay.show { opacity: 1; pointer-events: all; }
+
+.popup {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 48px 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.popup-icon { font-size: 3.5rem; }
+.popup h2 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; }
+
+#play-again-btn {
+  background: var(--x-color);
+  color: #fff;
+  padding: 14px 36px;
+  border-radius: 14px;
+  font-size: 1rem;
+  flex: none;
+  width: auto;
+}
+
+#play-again-btn:hover { background: #ff4f4f; transform: translateY(-2px); }/* ============================================================
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
